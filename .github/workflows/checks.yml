@@ -48,7 +48,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: build
-        if: (crazy != 'true' || inputs.is_called) && inputs.env-build == ''
+        if: (inputs.crazy != 'true' || inputs.is_called) && inputs.env-build == ''
         run: |
           echo "HI"
       - name: Set up QEMU
