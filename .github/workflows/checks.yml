@@ -6,6 +6,9 @@ on:
         type: boolean
         description: "bool"
         default: false
+  push:
+    paths:
+      - "pkg/**"
 
 concurrency:
   cancel-in-progress: true
@@ -52,9 +55,14 @@ jobs:
         run: |
           echo "HI"
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - uses: actions/setup-go@v5
+      - uses: dorny/paths-filter@v3
+        id: changes
         with:
-          go-version-file: go.mod
-          check-latest: true
-     
+          filters: |
+            src:
+              - 'cmd/**'
+      
+        # run only if some file in 'src' folder was changed
+      - if: steps.changes.outputs.src == 'true'
+        run: echo "BLAHHH"
+           
