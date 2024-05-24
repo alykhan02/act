@@ -1,6 +1,11 @@
 name: checks
 on: 
   workflow_dispatch:
+    inputs:
+      crazy:
+        type: boolean
+        description: "bool"
+        default: false
 
 concurrency:
   cancel-in-progress: true
@@ -43,7 +48,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: build
-        if: (true || inputs.is_called) && inputs.env-build == ''
+        if: (crazy != 'true' || inputs.is_called) && inputs.env-build == ''
         run: |
           echo "HI"
       - name: Set up QEMU
