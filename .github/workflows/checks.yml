@@ -1,5 +1,12 @@
 name: checks
-on: [pull_request, workflow_dispatch]
+on: 
+  workflow_dispatch:
+    inputs:
+      env-build:
+        type: string
+        description: "Environment type"
+        required: false
+        default: "dev"
 
 concurrency:
   cancel-in-progress: true
@@ -41,6 +48,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
+      - name: build
+        if: inputs.env-build != 'dev'
+        run: |
+          echo "HI"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - uses: actions/setup-go@v5
