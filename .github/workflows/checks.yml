@@ -43,7 +43,7 @@ jobs:
         with:
           fetch-depth: 2
       - name: build
-        if: inputs.env-build != 'dev'
+        if: inputs.env-build == ''
         run: |
           echo "HI"
       - name: Set up QEMU
