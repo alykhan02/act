@@ -60,7 +60,14 @@ jobs:
         run: |
           echo "HI"
       - name: Set up QEMU
-        # run only if some file in 'src' folder was changed
-        if: steps.changes.outputs.src == 'true'
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'cmd/**'
+      
+        # run only if some file in 'cmd' folder was changed
+      - if: steps.changes.outputs.src == 'true'
         run: echo "BLAHHH"
            
