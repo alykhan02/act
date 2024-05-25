@@ -48,20 +48,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: build
-        if: (inputs.crazy != 'true' || inputs.is_called) && inputs.env-build == ''
-        run: |
-          echo "HI"
-      - name: Set up QEMU
       - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
             src:
               - 'cmd/**'
-      
+          fetch-depth: 2
+      - name: build
+        if: (inputs.crazy != 'true' || inputs.is_called) && inputs.env-build == ''
+        run: |
+          echo "HI"
+      - name: Set up QEMU
         # run only if some file in 'src' folder was changed
       - if: steps.changes.outputs.src == 'true'
         run: echo "BLAHHH"
