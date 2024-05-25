@@ -48,7 +48,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
         with:
+          filters: |
+            src:
+              - 'cmd/**'
           fetch-depth: 2
       - name: build
         if: (inputs.crazy != 'true' || inputs.is_called) && inputs.env-build == ''
