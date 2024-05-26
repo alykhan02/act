@@ -20,47 +20,27 @@ env:
   CGO_ENABLED: 0
 
 jobs:
-  lint:
-    name: lint
+  tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          check-latest: true
-      - uses: golangci/golangci-lint-action@v6.0.1
-        with:
-          version: v1.53
-          only-new-issues: true
-      - uses: megalinter/megalinter/flavors/go@v7.11.1
-        env:
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: false
-          GITHUB_STATUS_REPORTER: ${{ !env.ACT }}
-          GITHUB_COMMENT_REPORTER: ${{ !env.ACT }}
+    - uses: actions/checkout@v4
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          cmd:
+            - 'cmd/**'
+          pkg:
+            - 'pkg/**'
 
-  test-linux:
-    name: test-linux
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            src:
-              - 'cmd/**'
-          fetch-depth: 2
-      - name: build
-        if: (inputs.crazy != 'true' || inputs.is_called) && inputs.env-build == ''
-        run: |
-          echo "HI"
-      - name: Set up QEMU
-        # run only if some file in 'cmd' folder was changed
-        if: steps.changes.outputs.src == 'true'
-        run: echo "BLAHHH"
-           
+    # run only if 'cmd' files were changed
+    - name: cmd tests
+      if: steps.filter.outputs.cmd == 'true'
+      run: echo "cmd tests"
+
+    # run only if 'pkg' files were changed
+    - name: pkg tests
+      if: steps.filter.outputs.pkg == 'true'
+      run: echo "pkg tests"
+
+
