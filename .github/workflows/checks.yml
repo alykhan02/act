@@ -7,8 +7,10 @@ on:
         description: "bool"
         default: false
   push:
-    paths:
-      - "pkg/**"
+    branches: [master]
+  pull_request:
+    branches: [master]
+
 
 concurrency:
   cancel-in-progress: true
